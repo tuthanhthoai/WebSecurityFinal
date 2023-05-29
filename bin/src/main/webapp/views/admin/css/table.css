@@ -1,0 +1,5 @@
+@charset "UTF-8";
+
+.maintable tr > *:nth-child(7) {
+    display: none;
+}
