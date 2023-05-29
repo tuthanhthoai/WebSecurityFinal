@@ -34,7 +34,7 @@
 			<div class="body-content">
 				
 				<div class="form-container">
-		            <form action="/account/profile/edit" class="form" method="post">
+		            <form action="/account/profile/edit" class="form" method="post" onsubmit="validateEditProfile()">
 		            	<!-- <div class="form__row">
 		                    <label class="form__label" for="avatar">Ảnh Đại Diện: </label>
 		                    <input class="form__input" type="text" name="avatar" id="avatar">
@@ -64,7 +64,7 @@
 		                    <label class="form__label" for="address">Địa chỉ:</label>
 		                  	<input class="form__input" type="text" name="address" id="address" value="${user.address}">
 		                </div>
-		                <button class="save-info">Lưu</button>
+		                <button class="save-info" onsubmit="validateEditProfile()">Lưu</button>
 		            </form>
 		        </div>
 				
@@ -72,7 +72,8 @@
 			</div>
 		</div>
 	</div>
-	
+	<script src = "/js/login.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.3/purify.min.js"></script>
 <%@ include file="/common/web/footer.jsp"%>
 </body>
 </html>

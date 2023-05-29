@@ -9,14 +9,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class ContentSecurityPolicySecurityConfiguration {
+
 	@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.headers()
-            .xssProtection()
-//            .and()
-//            .contentSecurityPolicy("img-src *;script-src 'none';frame-src 'none'")
-            .and()
-            .frameOptions().deny();
-        return http.build();
-    }
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+		http.csrf().disable().authorizeHttpRequests((authorize) -> authorize.antMatchers("/account/**").permitAll());
+		http.headers().xssProtection().and().frameOptions().deny();
+		return http.build();
+	}
+
 }
