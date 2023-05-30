@@ -9,6 +9,8 @@
 <link rel='stylesheet' href="/css/login/login.css">
 <link rel='stylesheet' href="/css/alertMessage.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src = "/js/login.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.3/purify.min.js"></script>
 </head>
 <body>
 	
@@ -37,7 +39,7 @@
       <div class="tabs-content">
         
         <div id="login-tab-content" class="active">
-          <form class="login-form" action="/account/login" method="post">
+          <form class="login-form" action="/account/login" method="post" onsubmit="validateInput()">
             <input type="email" class="input" id="email" name="email"  value="${user.email}" required placeholder="Email">
             <input type="password" class="input" id="password" name="password" value="${user.password}"  autocomplete="off" required placeholder="Mật khẩu">
             <input type="submit" class="button" value="Đăng nhập">
@@ -48,12 +50,12 @@
         </div><!--.login-tab-content-->
         
         <div id="signup-tab-content" >
-          <form class="signup-form" action="/account/signup" method="post">
+          <form class="signup-form" action="/account/signup" method="post" onsubmit="validateInput()">
             <input type="email" class="input" id="email" name="email" value="${user.email}" autocomplete="off" required placeholder="Email">
             <input type="text" class="input" id="firstName" name="firstName" value="${user.firstName}" autocomplete="off" required placeholder="Họ">
             <input type="text" class="input" id="lastName" name="lastName" value="${user.lastName}" autocomplete="off" required placeholder="Tên">
             <input type="text" class="input" id="idCard" name="idCard" value="${user.idCard}" autocomplete="off" required placeholder="Số CMND">
-            <input type="text" class="input" id="phone" name="phone" value="${user.phone}" autocomplete="off" required placeholder="Số điện thoại">
+            <input type="text" class="input" id="phone" name="phone" value="${user.phone}" autocomplete="off" required placeholder="Số điện thoại" pattern="^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$">
            <!--  <input type="text" class="input" id="phone" name="" autocomplete="off" placeholder="Địa chỉ"> -->
             <input type="password" class="input" id="password" name="password" value="${user.password}" required autocomplete="off" placeholder="Mật khẩu">
             <input type="password" class="input" id="password2" name="password2" value="${user.password2}" required autocomplete="off" placeholder="Nhập lại mật khẩu">

@@ -97,6 +97,14 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.4</version>
 		</dependency>
+		<!-- add depency for StringEscapeUtils -->
+
+		
+		<dependency>
+    		<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-lang3</artifactId>
+    		<version>3.12.0</version>
+		</dependency>
 
 
 	</dependencies>
