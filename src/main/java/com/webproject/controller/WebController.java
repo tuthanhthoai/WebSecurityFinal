@@ -41,7 +41,7 @@ import com.webproject.service.StoreService;
 public class WebController {
 	@Autowired
 	private StoreService storeService;
-	
+
 	@Autowired
 	private CategoryService cateService;
 
@@ -59,35 +59,36 @@ public class WebController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + file.getFilename() + "\"")
 				.body(file);
 	}
+
 	@GetMapping("")
 	public String homePage(ModelMap model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<Product> list = productService.findLastestProduct();
-		
+
 		model.addAttribute("page", "home");
 		model.addAttribute("productlist", list);
 		return "web/trangchu";
 	}
-	
+
 	@GetMapping("category-list")
 	public String categoryPage(ModelMap model, HttpSession session) {
-		//User user = (User) session.getAttribute("user");
+		// User user = (User) session.getAttribute("user");
 		List<Category> categories = cateService.findAll();
 		model.addAttribute("categories", categories);
 		model.addAttribute("page", "category");
 		return "web/CategoryList";
 	}
-	
+
 	@GetMapping("category-list/{categoryslug}")
-	public String productByCate(ModelMap model,@PathVariable String categoryslug, HttpSession session) {
+	public String productByCate(ModelMap model, @PathVariable String categoryslug, HttpSession session) {
 		Category cate = cateService.findBySlug(categoryslug);
 		List<Product> list = productService.findAllByCategoryId(cate.get_id());
-		model.addAttribute("cate",cate);
-		model.addAttribute("list",list);
-		
+		model.addAttribute("cate", cate);
+		model.addAttribute("list", list);
+
 		return "web/ketquatimkiem";
 	}
-	
+
 	@GetMapping("store/{id}")
 	public String getMethodName(Model model, @PathVariable Long id) {
 		Optional<Store> opt = storeService.findById(id);
@@ -96,37 +97,45 @@ public class WebController {
 		model.addAttribute("listProducts", list);
 		return "vendor/InfoStore";
 	}
-	
+
 	@PostMapping("search")
 	public String search(Model model, HttpServletRequest req) {
-		String searchKey = req.getParameter("search-key");
-		String option = req.getParameter("option");
-		
-		if(option.equals("product")) {
-			List<Product> products = productService.searchProductByName("%"+searchKey+"%");
-			if(products.size() > 0)
-				model.addAttribute("list",products);
-		}
-		else if(option.equals("category")) {
-			List<Category> categories = cateService.searchCategoryByName("%"+searchKey+"%");
-			if(categories.size() > 0)
-				model.addAttribute("categories",categories);
-		}
-		else if(option.equals("store")) {
+		try {
+			if (req.getParameter("search-key").equals("") || req.getParameter("option").equals("")) {
+				System.err.println("s");
+				return "web/ketquatimkiem";
+			} else {
+				String searchKey = req.getParameter("search-key");
+				String option = req.getParameter("option");
+
+				if (option.equals("product")) {
+					List<Product> products = productService.searchProductByName("%" + searchKey + "%");
+					if (products.size() > 0)
+						model.addAttribute("list", products);
+				} else if (option.equals("category")) {
+					List<Category> categories = cateService.searchCategoryByName("%" + searchKey + "%");
+					if (categories.size() > 0)
+						model.addAttribute("categories", categories);
+				} else if (option.equals("store")) {
+					System.err.println("s");
+				}
+				model.addAttribute("option", option);
+				model.addAttribute("search-key", searchKey);
+				return "web/ketquatimkiem";
+			}
+		} catch (Exception e) {
 			System.err.println("s");
+			return "web/ketquatimkiem";
 		}
-		model.addAttribute("option",option);
-		model.addAttribute("search-key",searchKey);
-		return "web/ketquatimkiem";
 	}
-	
+
 	@GetMapping("/product/{id}")
-	public String productDetail(ModelMap model,@PathVariable Long id, HttpSession session) {
+	public String productDetail(ModelMap model, @PathVariable Long id, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		Product product = productService.findById(id).get();
-		
-		model.addAttribute("product",product);
+
+		model.addAttribute("product", product);
 		return "web/productDetail";
 	}
-	
+
 }
