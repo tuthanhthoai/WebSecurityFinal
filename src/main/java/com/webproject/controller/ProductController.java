@@ -8,8 +8,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.webproject.SpringBootWebApplication;
 import com.webproject.entity.Category;
 import com.webproject.entity.Product;
 import com.webproject.entity.Store;
@@ -39,6 +38,7 @@ import com.webproject.service.StoreService;
 import com.webproject.service.StyleService;
 import com.webproject.service.StyleValueService;
 
+@SuppressWarnings("deprecation")
 @Controller
 @RequestMapping("vendor/store/product")
 public class ProductController {
@@ -56,7 +56,7 @@ public class ProductController {
 
 	@Autowired
 	private StyleService styleService;
-	
+
 	@Autowired
 	private StyleValueService styleValueService;
 
@@ -101,32 +101,51 @@ public class ProductController {
 
 	@PostMapping("create")
 	public String createProduct(Model model, @Valid @ModelAttribute("product") Product product,
-			@RequestParam("cateId") Long cateId, @RequestParam("listImagesFile") MultipartFile[] listImages,
-			BindingResult result) {
+			@RequestParam("priceP") String priceP, @RequestParam("cateId") Long cateId,
+			@RequestParam("listImagesFile") MultipartFile[] listImages, BindingResult result) {
 		if (result.hasErrors()) {
 			return "vendor/product/createProduct";
 		}
+
+		String message = "";
 		User user = (User) session.getAttribute("user");
 		Store store = storeService.findByOwnerId(user.get_id());
 		product.setStoreId(store);
 
 		Optional<Category> cate = categoryService.findById(cateId);
 		product.setCategoryId(cate.get());
+		String price = StringEscapeUtils.escapeHtml4((priceP));
+		if (isDouble(price)) {
 
-		if (!listImages[0].isEmpty()) {
-			String[] temp = new String[listImages.length];
-			int index = 0;
-			for (MultipartFile x : listImages) {
-				UUID uuid = UUID.randomUUID();
-				String uuString = uuid.toString();
-				temp[index] = storageService.getStorageFilename(x, uuString);
-				index++;
+			String name = StringEscapeUtils.escapeHtml4(product.getName().toString().trim());
+			String desc = StringEscapeUtils.escapeHtml4(product.getDescription().toString().trim());
+
+			// String price =
+			// StringEscapeUtils.escapeHtml4(Double.toString(product.getPrice()));
+
+			product.setPrice(Double.parseDouble(price));
+			product.setName(name);
+			product.setDescription(desc);
+			if (!listImages[0].isEmpty()) {
+				String[] temp = new String[listImages.length];
+				int index = 0;
+				for (MultipartFile x : listImages) {
+					UUID uuid = UUID.randomUUID();
+					String uuString = uuid.toString();
+					temp[index] = storageService.getStorageFilename(x, uuString);
+					index++;
+				}
+				product.setListImages(temp);
+				storageService.store(listImages, product.getListImages());
 			}
-			product.setListImages(temp);
-			storageService.store(listImages, product.getListImages());
+			productService.save(product);
+			message = "Tạo sản phẩm thành công";
+
+		} else {
+			message = "Giá không hợp lệ!";
+
 		}
-		productService.save(product);
-		model.addAttribute("message", "Tạo thành công");
+		model.addAttribute("message", message);
 		return "redirect:/vendor/store/product";
 	}
 
@@ -145,32 +164,46 @@ public class ProductController {
 
 	@PostMapping("edit/{id}")
 	public String update(Model model, @Valid @ModelAttribute("product") Product product, @PathVariable("id") Long id,
-			@RequestParam(required = false, name = "cateId") Long cateId,
+			@RequestParam("priceP") String priceP, @RequestParam(required = false, name = "cateId") Long cateId,
 			@RequestParam("listImagesFile") MultipartFile[] listImagesFile, BindingResult result) throws Exception {
 
 		if (result.hasErrors()) {
 			return "vendor/store/editStore";
 		}
 
+		String message = "";
+
 		product.set_id(id);
 		if (cateId != null)
 			product.setCategoryId(categoryService.findById(cateId).get());
+		String price = StringEscapeUtils.escapeHtml4((priceP));
+		if (isDouble(price)) {
+			String name = StringEscapeUtils.escapeHtml4(product.getName().toString().trim());
+			String desc = StringEscapeUtils.escapeHtml4(product.getDescription().toString().trim());
 
-		if (!listImagesFile[0].isEmpty()) {
-			String[] temp = new String[listImagesFile.length];
-			int index = 0;
-			for (MultipartFile x : listImagesFile) {
-				UUID uuid = UUID.randomUUID();
-				String uuString = uuid.toString();
-				temp[index] = storageService.getStorageFilename(x, uuString);
-				index++;
+			product.setPrice(Double.parseDouble(price));
+			product.setName(name);
+			product.setDescription(desc);
+
+			if (!listImagesFile[0].isEmpty()) {
+				String[] temp = new String[listImagesFile.length];
+				int index = 0;
+				for (MultipartFile x : listImagesFile) {
+					UUID uuid = UUID.randomUUID();
+					String uuString = uuid.toString();
+					temp[index] = storageService.getStorageFilename(x, uuString);
+					index++;
+				}
+				product.setListImages(temp);
+				storageService.store(listImagesFile, product.getListImages());
 			}
-			product.setListImages(temp);
-			storageService.store(listImagesFile, product.getListImages());
+			productService.save(product);
+			message = "Chỉnh sửa thành công";
+		} else {
+			message = "Thông tin không hợp lệ";
 		}
-		productService.save(product);
 
-		model.addAttribute("message", "Chỉnh sửa thành công");
+		model.addAttribute("message", message);
 		return "redirect:/vendor/store/product";
 	}
 
@@ -195,15 +228,26 @@ public class ProductController {
 			@RequestParam("cateId") Long cateId) {
 		Optional<Category> category = categoryService.findById(1L);
 		List<Style> listStyles = styleService.findByCategoryId(category.get());
-		
+
 		for (int i = 0; i < listStyles.size(); i++) {
 			StyleValue temp = list.get(i);
 			temp.setStyleId(listStyles.get(i));
 			styleValueService.save(temp);
 		}
-		
+
 		Product product = (Product) model.getAttribute("product");
 		product.setStyleValueIds(list);
 		model.addAttribute("product", product);
+	}
+
+	public boolean isDouble(String str) {
+		if (str.isEmpty())
+			return false;
+		try {
+			Double.parseDouble(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }

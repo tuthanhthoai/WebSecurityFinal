@@ -12,17 +12,15 @@ function validateInput(){
 	const idCard = document.getElementById("idCard");
 	const phone = document.getElementById("phone");
 	const pw2 = document.getElementById("password2");
-	const address = document.getElementById("address");
 	
 	
-	let emailClean = DOMPurify.sanitize(email.value, {SAFE_FOR_TEMPLATES: true});
-	let pwClean = DOMPurify.sanitize(pw.value, {SAFE_FOR_TEMPLATES: true});
-	let firstNameClean = DOMPurify.sanitize(firstName.value, {SAFE_FOR_TEMPLATES: true});
-	let lastNameClean = DOMPurify.sanitize(lastName.value, {SAFE_FOR_TEMPLATES: true});
-	let idCardClean = DOMPurify.sanitize(idCard.value, {SAFE_FOR_TEMPLATES: true});
-	let phoneClean = DOMPurify.sanitize(phone.value, {SAFE_FOR_TEMPLATES: true});
-	let pw2Clean = DOMPurify.sanitize(pw2.value, {SAFE_FOR_TEMPLATES: true});
-	let addressClean = DOMPurify.sanitize(address.value, {SAFE_FOR_TEMPLATES: true});
+	let emailClean = DOMPurify.sanitize(email.value,{ALLOWED_TAGS: ['b']});
+	let pwClean = DOMPurify.sanitize(pw.value,{ALLOWED_TAGS: ['b']});
+	let firstNameClean = DOMPurify.sanitize(firstName.value,{ALLOWED_TAGS: ['b']});
+	let lastNameClean = DOMPurify.sanitize(lastName.value,{ALLOWED_TAGS: ['b']});
+	let idCardClean = DOMPurify.sanitize(idCard.value,{ALLOWED_TAGS: ['b']});
+	let phoneClean = DOMPurify.sanitize(phone.value,{ALLOWED_TAGS: ['b']});
+	let pw2Clean = DOMPurify.sanitize(pw2.value,{ALLOWED_TAGS: ['b']});
 	
 	
 	email.value=emailClean;
@@ -32,7 +30,7 @@ function validateInput(){
 	idCard.value=idCardClean;
 	phone.value=phoneClean;
 	pw2.value=pw2Clean;
-	address.value=addressClean;
+	
 }
 
 function validateEditProfile(){
@@ -42,11 +40,11 @@ function validateEditProfile(){
 	const phone = document.getElementById("phone");
 	const address = document.getElementById("address");
 	
-	let firstNameClean = DOMPurify.sanitize(firstName.value, {SAFE_FOR_TEMPLATES: true});
-	let lastNameClean = DOMPurify.sanitize(lastName.value, {SAFE_FOR_TEMPLATES: true});
-	let idCardClean = DOMPurify.sanitize(idCard.value, {SAFE_FOR_TEMPLATES: true});
-	let phoneClean = DOMPurify.sanitize(phone.value, {SAFE_FOR_TEMPLATES: true});
-	let addressClean = DOMPurify.sanitize(address.value, {SAFE_FOR_TEMPLATES: true});
+	let firstNameClean = DOMPurify.sanitize(firstName.value,{ALLOWED_TAGS: ['b']});
+	let lastNameClean = DOMPurify.sanitize(lastName.value,{ALLOWED_TAGS: ['b']});
+	let idCardClean = DOMPurify.sanitize(idCard.value,{ALLOWED_TAGS: ['b']});
+	let phoneClean = DOMPurify.sanitize(phone.value,{ALLOWED_TAGS: ['b']});
+	let addressClean = DOMPurify.sanitize(address.value,{ALLOWED_TAGS: ['b']});
 	
 	firstName.value=firstNameClean;
 	lastName.value=lastNameClean;
@@ -54,11 +52,29 @@ function validateEditProfile(){
 	phone.value=phoneClean;
 	address.value=addressClean;
 	
-	console.log(firstName.value);
-	console.log(lastName.value);
-	console.log(idCard.value);
-	console.log(phone.value);
-	console.log(address.value);
-	
 		
+}
+
+function validateVendorInput(){
+	const id = document.getElementById("_id");
+	const name = document.getElementById("name");
+	const bio = document.getElementById("bio");
+	const avatarFile = document.getElementById("avatarFile");
+	const coverFile = document.getElementById("coverFile");
+	const featuredImagesFile = document.getElementById("featuredImagesFile");
+	
+	let idClean = DOMPurify.sanitize(id.value,{ALLOWED_TAGS: ['b']});
+	let nameClean = DOMPurify.sanitize(name.value,{ALLOWED_TAGS: ['b']});
+	let bioClean = DOMPurify.sanitize(bio.value,{ALLOWED_TAGS: ['b']});
+	let avtClean = DOMPurify.sanitize(avatarFile.value,{ALLOWED_TAGS: ['b']});
+	let coverFileClean = DOMPurify.sanitize(coverFile.value,{ALLOWED_TAGS: ['b']});
+	let featuredImgClean = DOMPurify.sanitize(featuredImagesFile.value,{ALLOWED_TAGS: ['b']});
+	
+	id.value = idClean;
+	name.value = nameClean;
+	bio.value = bioClean;
+	avatarFile.value = avtClean;
+	coverFile.value = coverFileClean;
+	featuredImagesFile.value = featuredImgClean;
+	
 }

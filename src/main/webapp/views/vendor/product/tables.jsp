@@ -87,6 +87,15 @@
 
 		<!-- Content Wrapper -->
 		<div id="content-wrapper" class="d-flex flex-column">
+		
+		<div id="alertMessage" style ="height: 30px">
+		<c:if test="${message!=null}">
+			<div class="alert">
+			  <span class="closebtn">&times;</span>  
+			 	${message}
+			</div>
+		</c:if>
+		</div>
 
 			<!-- Main Content -->
 			<div id="content">
@@ -275,8 +284,8 @@
 								</div>
 								<div>
 									<label for="price" class="form-label">Price:</label> <input
-										type="text" class="form-control" value="${product.price}"
-										name="price" id="price">
+										type="text" class="form-control" value="${priceP}"
+										name="priceP" id="price">
 								</div>
 								<div>
 									<label for="cateId" class="form-label">Category:</label> <select
@@ -286,10 +295,10 @@
 										</c:forEach>
 									</select>
 								</div>
-								<div>
+								<!-- <div>
 									<a class="btn btn-primary m-2" href="#" data-toggle="modal"
 										data-target="#styleModal">Thêm thuộc tính</a>
-								</div>
+								</div> -->
 								<div>
 									<label for="listImagesFile" class="form-label">List
 										Images</label> <input type="file" class="form-control-file"
@@ -338,8 +347,8 @@
 								</div>
 								<div>
 									<label for="price" class="form-label">Price:</label> <input
-										type="text" class="form-control" value="${product.price}"
-										name="price" id="price">
+										type="text" class="form-control" value="${priceP}"
+										name="priceP" id="price">
 								</div>
 								<div>
 									<label for="cateId" class="form-label">Category:</label> <select
@@ -349,10 +358,10 @@
 										</c:forEach>
 									</select>
 								</div>
-								<div>
+								<!-- <div>
 									<a class="btn btn-primary m-2" href="#" data-toggle="modal"
 										data-target="#styleModal">Thêm thuộc tính</a>
-								</div>
+								</div> -->
 								<div>
 									<label for="listImagesFile" class="form-label">List
 										Images</label> <input type="file" class="form-control-file"
@@ -369,7 +378,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="styleModal" tabindex="-1" role="dialog"
+	<%-- <div class="modal fade" id="styleModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -380,13 +389,13 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<%-- <form action="#">
+					<form action="#">
 						<c:forEach items="${listStyles}" var="item">
 							<input type="text" name="styleValue"
 								class="form-control styleValueClass" value="${item.name}">
 							<input class="btn btn-primary" type="submit" value="Thêm">
 						</c:forEach>
-					</form> --%>
+					</form>
 					<h2>Thêm giá trị cho thuộc tính</h2>
 					<form action="" method="post" enctype="multipart/form-data">
 						<c:forEach items="${listStyles }" var="style">
@@ -410,7 +419,7 @@
 			</div>
 		</div>
 	</div>
-
+ --%>
 
 	<!-- Bootstrap core JavaScript-->
 	<script src="/js/jquery.min.js"></script>
@@ -454,7 +463,22 @@
 			let test = document.getElementById("deleteYes")
 			test.setAttribute("href", "/vendor/store/product/delete?id=" + id);
 		})
+		
+		var close = document.getElementsByClassName("closebtn");
+    	var i;
+
+     	for (i = 0; i < close.length; i++) {
+       		close[i].onclick = function(){
+        	 var div = this.parentElement;
+         	div.style.opacity = "0";
+         	setTimeout(function(){ div.style.display = "none"; }, 600);
+       }
+     }
+     
+     
 	</script>
+	
+	
 </body>
 
 </html>

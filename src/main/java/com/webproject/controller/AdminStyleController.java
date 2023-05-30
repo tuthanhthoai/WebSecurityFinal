@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import com.webproject.service.CategoryService;
 import com.webproject.service.StyleService;
 import com.webproject.service.StyleValueService;
 
+@SuppressWarnings("deprecation")
 @Controller
 @RequestMapping("admin/style")
 public class AdminStyleController {
@@ -76,25 +79,43 @@ public class AdminStyleController {
 	}
 
 	@PostMapping("save")
-	public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("style") Style style, BindingResult result) {
+	public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("style") Style style,
+			BindingResult result) {
 		if (result.hasErrors()) {
 			return new ModelAndView("admin/Table/add_style");
 		}
-		styleService.save(style);
 
-		model.addAttribute("message", "Đã lưu thành công");
-		return new ModelAndView("forward:/admin/style/0/1", model);
+		String styleValue = StringEscapeUtils.escapeHtml4(style.getName());
+		if (!styleValue.isEmpty()) {
+			style.setName(styleValue);
+			styleService.save(style);
+			model.addAttribute("message", "Đã lưu thành công");
+			return new ModelAndView("forward:/admin/style/0/1", model);
+		} else {
+			return new ModelAndView("admin/Table/add_style");
+		}
+
 	}
+
 	@PostMapping("edit")
-	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("style") Style style, @RequestParam("_id") String id ,BindingResult result) {
+	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("style") Style style,
+			@RequestParam("_id") String id, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ModelAndView("admin/Table/add_style");
 		}
-		style.set_id(Long.parseLong(id));
-		styleService.save(style);
+		if (!id.isEmpty()) {
+			style.set_id(Long.parseLong(id));
 
-		model.addAttribute("message", "Đã lưu thành công");
-		return new ModelAndView("forward:/admin/style/0/1", model);
+			String styleValue = StringEscapeUtils.escapeHtml4(style.getName());
+			style.setName(styleValue);
+
+			styleService.save(style);
+
+			model.addAttribute("message", "Đã lưu thành công");
+			return new ModelAndView("forward:/admin/style/0/1", model);
+		} else {
+			return new ModelAndView("admin/Table/add_style");
+		}
 	}
 
 	@GetMapping("edit/{_id}")
@@ -138,15 +159,11 @@ public class AdminStyleController {
 		if (result.hasErrors()) {
 			return new ModelAndView("admin/Table/styleValue");
 		}
+
+		String styleValueName = StringEscapeUtils.escapeHtml4(styleValue.getName());
+		styleValue.setName(styleValueName);
 		styleValueService.save(styleValue);
-//		System.out.println("AdminStyleController.save()");
-//		Long styleId=Long.parseLong(id);
-//		Optional<Style>optional=styleService.findById(styleId);
-//		Style style=optional.get();
-//		List<StyleValue>styleValueys=styleValueService.findByStyleId(style);
-//		model.addAttribute("style", style);
-//		model.addAttribute("ListstyleValue", styleValueys);
-//		model.addAttribute("message", "Thêm thành công");
+
 		return new ModelAndView("redirect:/admin/style/value/" + id, model);
 	}
 

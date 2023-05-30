@@ -1,6 +1,5 @@
 package com.webproject.controller;
 
-import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,6 +7,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +36,7 @@ import com.webproject.service.ProductService;
 import com.webproject.service.StorageService;
 import com.webproject.service.StoreService;
 
+@SuppressWarnings("deprecation")
 @Controller
 @RequestMapping("vendor/store")
 public class StoreController {
@@ -106,6 +107,9 @@ public class StoreController {
 		User user = (User) session.getAttribute("user");
 		store.setOwnerId(user);
 
+		store.setBio(StringEscapeUtils.escapeHtml4(store.getBio().toString().trim()));
+		store.setName(StringEscapeUtils.escapeHtml4(store.getName().toString().trim()));
+
 		if (!avatarFile.isEmpty()) { // if (true) {
 			UUID uuid = UUID.randomUUID();
 			String uuString = uuid.toString();
@@ -148,6 +152,9 @@ public class StoreController {
 		}
 
 		store.set_id(id);
+
+		store.setBio(StringEscapeUtils.escapeHtml4(store.getBio().toString().trim()));
+		store.setName(StringEscapeUtils.escapeHtml4(store.getName().toString().trim()));
 
 		if (!avatarFile.isEmpty()) {
 			// if (false) {

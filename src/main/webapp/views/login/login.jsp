@@ -39,7 +39,7 @@
       <div class="tabs-content">
         
         <div id="login-tab-content" class="active">
-          <form class="login-form" action="/account/login" method="post" onsubmit="validateInput()">
+          <form class="login-form" action="/account/login" method="post" >
             <input type="email" class="input" id="email" name="email"  value="${user.email}" required placeholder="Email">
             <input type="password" class="input" id="password" name="password" value="${user.password}"  autocomplete="off" required placeholder="Mật khẩu">
             <input type="submit" class="button" value="Đăng nhập">

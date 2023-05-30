@@ -7,12 +7,15 @@
 <meta charset="UTF-8">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/css/bootstrap.min.css" />
+	
+	<script src = "/js/login.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.3/purify.min.js"></script>
 <title>Tạo cửa hàng</title>
 </head>
 <body>
 	<section class="row">
 		<div class="col-6 offset-3 mt-4">
-			<form action="<c:url value="/vendor/store/create"/>" method="post" enctype="multipart/form-data">
+			<form action="<c:url value="/vendor/store/create"/>" method="post" enctype="multipart/form-data" onsubmit="validateVendorInput()">
 				<div class="card">
 					<div class="card-header">
 						<h2>Tạo cửa hàng</h2>
