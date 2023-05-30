@@ -49,7 +49,7 @@
 				                            
 				                            <td class="text-center input-center">
 				                            <i class="fa fa-minus decreaseQty"></i>
-				                            <input class="form-control text-center product-quantity-cartitem" type="text" value="${cartitem.count}" />
+				                            <input class="form-control text-center product-quantity-cartitem" type="text" readonly value="${cartitem.count}" />
 				                            <i class="fa fa-plus increaseQty"></i>
 				                            
 				                            </td>
@@ -148,7 +148,7 @@
 		    	<input type="text" name="address" value=""><br/><br/>
 		    	
 		    	<label>Số Điện thoại: </label><br/>
-		    	<input type="text" name="phone" value=""><br/><br/>
+		    	<input type="text" name="phone" value="" pattern = "^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$"><br/><br/>
 		    	
 		    	<label>Đơn vị giao hàng: </label>
 		    	<select name="delivery" id="delivery">

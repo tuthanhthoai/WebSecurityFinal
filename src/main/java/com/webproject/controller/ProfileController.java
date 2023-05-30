@@ -61,11 +61,18 @@ public class ProfileController {
 		User user = (User) session.getAttribute("user");
 		if (user == null)
 			return "redirect:/account/login";
-		user.setFirstName(StringEscapeUtils.escapeHtml4(usermodel.getFirstName()));
-		user.setLastName(StringEscapeUtils.escapeHtml4(usermodel.getLastName()));
-		user.setIdCard(StringEscapeUtils.escapeHtml4(usermodel.getIdCard()));
-		user.setPhone(StringEscapeUtils.escapeHtml4(usermodel.getPhone()));
-		user.setAddress(StringEscapeUtils.escapeHtml4(usermodel.getAddress()));
+
+		String firstName = StringEscapeUtils.escapeHtml4(usermodel.getFirstName().trim());
+		String lastName = StringEscapeUtils.escapeHtml4(usermodel.getLastName().trim());
+		String idCard = StringEscapeUtils.escapeHtml4(usermodel.getIdCard().trim());
+		String phone = StringEscapeUtils.escapeHtml4(usermodel.getPhone().trim());
+		String address = StringEscapeUtils.escapeHtml4(usermodel.getAddress().trim());
+
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setIdCard(idCard);
+		user.setPhone(phone);
+		user.setAddress(address);
 		userService.save(user);
 
 		model.addAttribute("user", user);
@@ -87,10 +94,22 @@ public class ProfileController {
 			BindingResult result, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		String message = "";
+
+		String currentPw = StringEscapeUtils.escapeHtml4(usermodel.getCurrentpassword());
+		String pw = StringEscapeUtils.escapeHtml4(usermodel.getPassword());
+		String pw2 = StringEscapeUtils.escapeHtml4(usermodel.getPassword2());
 		if (user == null)
 			return "redirect:/account/login";
 
-		if (BCrypt.checkpw(usermodel.getCurrentpassword(), user.getHashedPassword())) {
+		usermodel.setCurrentpassword(currentPw);
+		usermodel.setPassword(pw);
+		usermodel.setPassword2(pw2);
+		if (currentPw.isEmpty() || pw.isEmpty() || pw2.isEmpty()) {
+			model.addAttribute("user", user);
+			message = "Mật khẩu nhập lại không chính xác";
+			model.addAttribute("messageError", message);
+			return "web/changePassword";
+		} else if (BCrypt.checkpw(usermodel.getCurrentpassword(), user.getHashedPassword())) {
 			if (usermodel.getPassword().equals(usermodel.getPassword2())) {
 				user.setHashedPassword(BCrypt.hashpw(usermodel.getPassword(), BCrypt.gensalt()));
 				userService.save(user);

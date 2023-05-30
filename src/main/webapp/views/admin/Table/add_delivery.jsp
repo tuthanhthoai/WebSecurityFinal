@@ -75,7 +75,7 @@
 							<div class="form-group">
 
 								<label for="slug">Price:</label> <input type="number"
-									class="form-control" name="price" value="${delivery.price }" />
+									class="form-control" name="priceD" value="${delivery.price }" />
 
 							</div>
 

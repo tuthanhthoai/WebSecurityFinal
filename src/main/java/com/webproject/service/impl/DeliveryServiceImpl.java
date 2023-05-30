@@ -13,10 +13,9 @@ import com.webproject.entity.Delivery;
 import com.webproject.repository.DeliveryRepo;
 import com.webproject.service.DeliveryService;
 
-
 @Service
-public class DeliveryServiceImpl implements DeliveryService{
-	
+public class DeliveryServiceImpl implements DeliveryService {
+
 	@Autowired
 	private DeliveryRepo deliveryRepo;
 
@@ -54,6 +53,11 @@ public class DeliveryServiceImpl implements DeliveryService{
 	public Page<Delivery> page(int index, int size) {
 		// TODO Auto-generated method stub
 		return deliveryRepo.findAll(PageRequest.of(index, size));
+	}
+
+	@Override
+	public Optional<Delivery> findByName(String name) {
+		return deliveryRepo.findByName(name);
 	}
 
 }

@@ -20,4 +20,6 @@ public interface DeliveryService {
 	void deleteById(Long id);
 
 	Page<Delivery> page(int index, int size);
+
+	Optional<Delivery> findByName(String name);
 }

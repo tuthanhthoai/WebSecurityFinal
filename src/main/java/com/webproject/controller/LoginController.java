@@ -104,11 +104,14 @@ public class LoginController {
 		String regexNumber = "^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$";
 		String regexIdCard = "^[1-9][0-9]{8}$";
 		String regexIsAllSameDigits = "^(.)\\1+$";
+		// String regexPw = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
 
 		if (!user.getIdCard().matches(regexIdCard) || user.getIdCard().matches(regexIsAllSameDigits)) {
 			message = "số CMND không hợp lệ";
 		} else if (!user.getPhone().matches(regexNumber) || user.getPhone().matches(regexIsAllSameDigits)) {
 			message = "số điện thoại không hợp lệ";
+//		} else if (!user.getPassword().matches(regexPw) || !user.getPassword2().matches(regexPw)) {
+//			message = "mật khẩu không hợp lệ";
 		} else if (!user.getPassword().equals(user.getPassword2())) {
 			System.err.println(!user.getPassword().toString().equals(user.getPassword2().toString()));
 			message = "mật khẩu nhập lại không chính xác";
@@ -127,7 +130,7 @@ public class LoginController {
 				model.remove("user");
 				return new ModelAndView("login/login");
 			} catch (Exception e) {
-				message = "Thông tin không hợp lệ" + lastName + "HE";
+				message = "Thông tin không hợp lệ";
 			}
 
 		}
