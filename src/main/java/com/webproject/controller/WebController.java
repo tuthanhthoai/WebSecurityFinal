@@ -94,14 +94,13 @@ public class WebController {
 
 	@PostMapping("search")
 	public String search(Model model, HttpServletRequest req) {
-<<<<<<< HEAD
 		try {
 			if (req.getParameter("search-key").equals("") || req.getParameter("option").equals("")) {
 				System.err.println("s");
 				return "web/ketquatimkiem";
 			} else {
-				String searchKey = req.getParameter("search-key");
-				String option = req.getParameter("option");
+				String searchKey = StringEscapeUtils.escapeHtml4(req.getParameter("search-key"));
+				String option = StringEscapeUtils.escapeHtml4(req.getParameter("option"));
 
 				if (option.equals("product")) {
 					List<Product> products = productService.searchProductByName("%" + searchKey + "%");
@@ -119,29 +118,8 @@ public class WebController {
 				return "web/ketquatimkiem";
 			}
 		} catch (Exception e) {
-=======
-		String searchKey = StringEscapeUtils.escapeHtml4(req.getParameter("search-key"));
-		String option = StringEscapeUtils.escapeHtml4(req.getParameter("option"));
-
-		if (option.equals("product")) {
-			List<Product> products = productService.searchProductByName("%" + searchKey + "%");
-			if (products.size() > 0)
-				model.addAttribute("list", products);
-		} else if (option.equals("category")) {
-			List<Category> categories = cateService.searchCategoryByName("%" + searchKey + "%");
-			if (categories.size() > 0)
-				model.addAttribute("categories", categories);
-		} else if (option.equals("store")) {
->>>>>>> 0638ef13855de512208cc5a2a8b417099f2689a5
-			System.err.println("s");
 			return "web/ketquatimkiem";
 		}
-<<<<<<< HEAD
-=======
-		model.addAttribute("option", option);
-		model.addAttribute("search-key", searchKey);
-		return "web/ketquatimkiem";
->>>>>>> 0638ef13855de512208cc5a2a8b417099f2689a5
 	}
 
 	@GetMapping("/product/{id}")
