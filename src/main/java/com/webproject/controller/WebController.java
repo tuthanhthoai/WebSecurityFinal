@@ -94,23 +94,32 @@ public class WebController {
 
 	@PostMapping("search")
 	public String search(Model model, HttpServletRequest req) {
-		String searchKey = StringEscapeUtils.escapeHtml4(req.getParameter("search-key"));
-		String option = StringEscapeUtils.escapeHtml4(req.getParameter("option"));
+		try {
+			if (req.getParameter("search-key").equals("") || req.getParameter("option").equals("")) {
+				System.err.println("s");
+				return "web/ketquatimkiem";
+			} else {
+				String searchKey = StringEscapeUtils.escapeHtml4(req.getParameter("search-key"));
+				String option = StringEscapeUtils.escapeHtml4(req.getParameter("option"));
 
-		if (option.equals("product")) {
-			List<Product> products = productService.searchProductByName("%" + searchKey + "%");
-			if (products.size() > 0)
-				model.addAttribute("list", products);
-		} else if (option.equals("category")) {
-			List<Category> categories = cateService.searchCategoryByName("%" + searchKey + "%");
-			if (categories.size() > 0)
-				model.addAttribute("categories", categories);
-		} else if (option.equals("store")) {
-			System.err.println("s");
+				if (option.equals("product")) {
+					List<Product> products = productService.searchProductByName("%" + searchKey + "%");
+					if (products.size() > 0)
+						model.addAttribute("list", products);
+				} else if (option.equals("category")) {
+					List<Category> categories = cateService.searchCategoryByName("%" + searchKey + "%");
+					if (categories.size() > 0)
+						model.addAttribute("categories", categories);
+				} else if (option.equals("store")) {
+					System.err.println("s");
+				}
+				model.addAttribute("option", option);
+				model.addAttribute("search-key", searchKey);
+				return "web/ketquatimkiem";
+			}
+		} catch (Exception e) {
+			return "web/ketquatimkiem";
 		}
-		model.addAttribute("option", option);
-		model.addAttribute("search-key", searchKey);
-		return "web/ketquatimkiem";
 	}
 
 	@GetMapping("/product/{id}")

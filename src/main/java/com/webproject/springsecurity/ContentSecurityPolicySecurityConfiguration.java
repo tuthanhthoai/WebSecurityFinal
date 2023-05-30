@@ -11,11 +11,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ContentSecurityPolicySecurityConfiguration {
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-		http.csrf().disable().authorizeHttpRequests((authorize) -> authorize.antMatchers("/account/**").permitAll());
-		http.headers().xssProtection().and().frameOptions().deny();
-		return http.build();
-	}
-
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf()
+			.disable()
+			.authorizeHttpRequests((authorize) -> authorize.antMatchers("/**")
+			.permitAll());
+//		http.authorizeHttpRequests()
+//			.antMatchers("/account/**")
+//			.requiresChannel().antMatchers("/account/**").requireSecure();
+        http.headers()
+            .xssProtection()
+            .and()
+            .frameOptions().deny();
+        return http.build();
+    }
 }

@@ -14,6 +14,9 @@ import com.webproject.service.StorageService;
 @EnableConfigurationProperties(StorageProperties.class)
 public class SpringBootWebApplication {
 
+//	@Value("${http.port}")
+//	private int httpPort;
+//	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootWebApplication.class, args);
 	}
@@ -31,5 +34,18 @@ public class SpringBootWebApplication {
 		resolver.setDefaultEncoding("UTF-8");
 		return resolver;
 	}
+	
+//	@Bean
+//	public ServletWebServerFactory servletContainer() {
+//		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+//		tomcat.addAdditionalTomcatConnectors(createStandardConnector());
+//		return tomcat;
+//	}
+//
+//	private Connector createStandardConnector() {
+//		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+//		connector.setPort(httpPort);
+//		return connector;
+//	}
 	
 }
