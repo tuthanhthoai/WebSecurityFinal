@@ -3,7 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+                        script-src 'self' https://cdnjs.cloudflare.com https://ajax.googleapis.com; 
+                        style-src 'self' https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com; 
+                        font-src 'self' https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com; 
+                        img-src 'self' data:;" charset="UTF-8">
 <title>Insert title here</title>
 
  <!-- CSS -->
@@ -49,6 +53,7 @@
 	        
 	        	<form class="form-inline my-2 my-lg-0" action="/search" method="post">
 	                <div class="input-group input-group-sm searchfield">
+	                <input type="hidden" name="csrftoken" value="${sessionScope.token}">
 	                    <input type="text" class="form-control" id="search-key" name="search-key" placeholder="Search...">
 	                    <select name="option" id="option">
 						  	<option value="product">Sản phẩm</option>

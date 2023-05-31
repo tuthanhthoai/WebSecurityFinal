@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ajax.googleapis.com; style-src 'self';">
 <title>Đăng nhập</title>
 <link rel='stylesheet' href="/css/login/login.css">
 <link rel='stylesheet' href="/css/alertMessage.css">
@@ -40,6 +40,7 @@
         
         <div id="login-tab-content" class="active">
           <form class="login-form" action="/account/login" method="post" >
+          	<input type="hidden" name="csrftoken" value="${sessionScope.token}">
             <input type="email" class="input" id="email" name="email"  value="${user.email}" required placeholder="Email">
             <input type="password" class="input" id="password" name="password" value="${user.password}"  autocomplete="off" required placeholder="Mật khẩu">
             <input type="submit" class="button" value="Đăng nhập">
@@ -51,6 +52,7 @@
         
         <div id="signup-tab-content" >
           <form class="signup-form" action="/account/signup" method="post" onsubmit="validateInput()">
+          	<input type="hidden" name="csrftoken" value="${sessionScope.token}">
             <input type="email" class="input" id="email" name="email" value="${user.email}" autocomplete="off" required placeholder="Email">
             <input type="text" class="input" id="firstName" name="firstName" value="${user.firstName}" autocomplete="off" required placeholder="Họ">
             <input type="text" class="input" id="lastName" name="lastName" value="${user.lastName}" autocomplete="off" required placeholder="Tên">

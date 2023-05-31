@@ -110,7 +110,7 @@ public class ProfileController {
 			model.addAttribute("messageError", message);
 			return "web/changePassword";
 		} else if (BCrypt.checkpw(usermodel.getCurrentpassword(), user.getHashedPassword())) {
-			if (usermodel.getPassword().equals(usermodel.getPassword2())) {
+			if (BCrypt.checkpw(usermodel.getPassword2(), BCrypt.hashpw(usermodel.getPassword(), BCrypt.gensalt()))) {
 				user.setHashedPassword(BCrypt.hashpw(usermodel.getPassword(), BCrypt.gensalt()));
 				userService.save(user);
 				message = "Đổi mật khẩu thành công";
