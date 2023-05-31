@@ -1,5 +1,7 @@
 package com.webproject.controller;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -29,16 +31,20 @@ public class LoginController {
 	UserService userService;
 
 	@GetMapping("login")
-	public String loginPage(ModelMap model) {
+	public String loginPage(ModelMap model, HttpSession session) {
 		UserModel user = new UserModel();
 		model.addAttribute("user", user);
 		model.addAttribute("action", "login");
+		String token = UUID.randomUUID().toString();
+		session.setAttribute("token", token);
+
 		return "login/login";
 	}
 
 	@PostMapping("login")
-	public ModelAndView login(ModelMap model, @Valid @ModelAttribute("user") UserModel user, BindingResult result,
-			HttpSession session) throws JSONException {
+	public ModelAndView login(ModelMap model, @Valid @ModelAttribute("csrftoken") String csrfToken,
+			@Valid @ModelAttribute("user") UserModel user, BindingResult result, HttpSession session)
+			throws JSONException {
 		String message = "";
 		if (result.hasErrors()) {
 			return new ModelAndView("login/login");
@@ -48,6 +54,15 @@ public class LoginController {
 		String pw = StringEscapeUtils.escapeHtml4(user.getPassword().trim());
 		user.setEmail(email);
 		user.setPassword(pw);
+		String storedToken = (String) session.getAttribute("token");
+		System.err.println(csrfToken);
+		System.err.println(storedToken);
+		if (csrfToken == null || !csrfToken.equals(storedToken)) {
+			// Thông báo không xác thực
+			message = "Không xác thực được người dùng";
+			model.addAttribute("messageErorr", message);
+		}
+
 		if (user.getEmail() == "" || user.getPassword() == "") {
 			model.addAttribute("user", user);
 			model.addAttribute("messageError", "dữ liệu nhập vào không được để trống!");
@@ -73,15 +88,18 @@ public class LoginController {
 	}
 
 	@GetMapping("signup")
-	public String signUpPage(ModelMap model) {
+	public String signUpPage(ModelMap model, HttpSession session) {
 		UserModel user = new UserModel();
 		model.addAttribute("user", user);
 		model.addAttribute("action", "signup");
+		String token = UUID.randomUUID().toString();
+		session.setAttribute("token", token);
 		return "login/login";
 	}
 
 	@PostMapping("signup")
-	public ModelAndView signUp(ModelMap model, @Valid @ModelAttribute("user") UserModel user, BindingResult result) {
+	public ModelAndView signUp(ModelMap model, @Valid @ModelAttribute("csrftoken") String csrfToken,
+			@Valid @ModelAttribute("user") UserModel user, BindingResult result, HttpSession session) {
 		String message = "";
 		String email = StringEscapeUtils.escapeHtml4(user.getEmail().trim());
 		String firstName = StringEscapeUtils.escapeHtml4(user.getFirstName().trim());
@@ -105,6 +123,14 @@ public class LoginController {
 		String regexIdCard = "^[1-9][0-9]{8}$";
 		String regexIsAllSameDigits = "^(.)\\1+$";
 		// String regexPw = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
+		String storedToken = (String) session.getAttribute("token");
+		System.err.println(csrfToken);
+		System.err.println(storedToken);
+		if (csrfToken == null || !csrfToken.equals(storedToken)) {
+			// Thông báo không xác thực
+			message = "Đăng ký thất bại!";
+			model.addAttribute("messageErorr", message);
+		}
 
 		if (!user.getIdCard().matches(regexIdCard) || user.getIdCard().matches(regexIsAllSameDigits)) {
 			message = "số CMND không hợp lệ";
@@ -112,8 +138,7 @@ public class LoginController {
 			message = "số điện thoại không hợp lệ";
 //		} else if (!user.getPassword().matches(regexPw) || !user.getPassword2().matches(regexPw)) {
 //			message = "mật khẩu không hợp lệ";
-		} else if (!user.getPassword().equals(user.getPassword2())) {
-			System.err.println(!user.getPassword().toString().equals(user.getPassword2().toString()));
+		} else if (!BCrypt.checkpw(user.getPassword2(), BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()))) {
 			message = "mật khẩu nhập lại không chính xác";
 		} else if (user.getEmail() == "" || user.getFirstName() == "" || user.getLastName() == ""
 				|| user.getIdCard() == "" || user.getPhone() == "" || user.getPassword() == "") {
@@ -148,4 +173,3 @@ public class LoginController {
 	}
 
 }
-
