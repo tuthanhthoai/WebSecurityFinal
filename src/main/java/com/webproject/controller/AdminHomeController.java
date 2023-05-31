@@ -2,9 +2,6 @@ package com.webproject.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,7 +11,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.webproject.entity.Order;
 import com.webproject.entity.User;
 import com.webproject.service.OrderItemService;
 import com.webproject.service.OrderService;
@@ -49,19 +45,19 @@ public class AdminHomeController {
 		User user = (User) session.getAttribute("user");
 		if (user == null)
 			return "redirect:/account/login";
-		//format date
+		// format date
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 //		DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-DD");
-		//count
-		Long countUser=userService.Count();
-		Long countStore=storeService.count();
-		Long countProduct=productService.count();
-		Long orderCount=orderService.count();
+		// count
+		Long countUser = userService.Count();
+		Long countStore = storeService.count();
+		Long countProduct = productService.count();
+		Long orderCount = orderService.count();
 		modelMap.addAttribute("countUser", countUser);
 		modelMap.addAttribute("countStore", countStore);
 		modelMap.addAttribute("countProduct", countProduct);
 		modelMap.addAttribute("orderCount", orderCount);
-		
+
 //		//Revenue
 //		double revenueTotat=0;
 //		List<Order>orders=orderService.findAllSortDate();
@@ -90,15 +86,13 @@ public class AdminHomeController {
 //		modelMap.addAttribute("revenueTotat", revenueTotat);
 //		modelMap.addAttribute("orders", orders2);
 //		modelMap.addAttribute("dateRevenueTotal", dateRevenue);
-		
-		
-		//Product
-		
-		//Order
-		
-		
-		//User
-		
+
+		// Product
+
+		// Order
+
+		// User
+
 		return "admin/home";
 	}
 }
